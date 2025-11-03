@@ -10,7 +10,7 @@ export default function ThemeToggle() {
   return (
     <div
       onClick={toggleTheme}
-      className="cursor-pointer text-2xl transition-transform duration-300 hover:scale-110"
+      className="cursor-pointer md:text-5xl text-4xl transition-transform duration-300 hover:scale-110"
       title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
     >
       {theme === 'light' ? (
