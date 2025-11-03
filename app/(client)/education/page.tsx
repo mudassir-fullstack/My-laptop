@@ -1,7 +1,5 @@
-// src/app/(client)/education/page.tsx
 "use client";
 
-import Image from "next/image";
 import { useEducation } from "@/hooks/useEducation";
 
 const EducationPage = () => {
@@ -11,54 +9,45 @@ const EducationPage = () => {
   if (error) return <p className="text-center text-red-500 mt-10">{error}</p>;
 
   return (
-    <div className="max-w-5xl mx-auto py-10 px-4">
-      <h1 className="text-3xl font-bold text-center mb-8">🎓 Education</h1>
+    <section id="skills" className="overflow-x-hidden pt-6 pb-20 md:pb-52 fade-in-up">
+      <h2>Education</h2>
 
-      <div className="grid gap-6">
-        {data.map((edu) => (
+      <div className=" space-y-6">
+        {data.map((edu, index) => (
           <div
-            key={edu._id}
-            className="p-6 border rounded-xl shadow-md hover:shadow-lg transition"
+            key={edu._id || index}
+            className="
+              grid grid-cols-1 sm:grid-cols-3 md:grid-cols-12 
+              gap-4 items-start  pb-4
+            "
           >
-            <h2 className="text-xl font-semibold">{edu.degree}</h2>
-            <p className="text-gray-700">{edu.institution}</p>
-            {edu.fieldOfStudy && (
-              <p className="text-gray-600">{edu.fieldOfStudy}</p>
-            )}
-            <p className="text-sm text-gray-500 mt-2">
-              {edu.startDate} → {edu.isCurrent ? "Present" : edu.endDate}
-            </p>
+            {/* 🎓 Degree & Institution */}
+            <div className="col-span-12 md:col-span-9">
+              <h3 className="font-semibold text-lg text-(--text-color)">
+                {edu.degree}
+              </h3>
+              <h6 className=" text-sm md:text-base">
+                {edu.institution}{" "}
+                {edu.grade && (
+                  <span className="font-medium">
+                    {" - "}
+                    ({edu.grade})
+                  </span>
+                )}
+              </h6>
+            </div>
 
-            {edu.grade && (
-              <p className="text-sm text-gray-500">Grade: {edu.grade}</p>
-            )}
-
-            {edu.description && (
-              <p className="mt-3 text-gray-700">{edu.description}</p>
-            )}
-
-            {/* ✅ Multiple logos display */}
-            {edu.institutionLogos && edu.institutionLogos.length > 0 && (
-              <div className="flex flex-wrap gap-4 mt-4">
-                {edu.institutionLogos.map((logoUrl, index) => (
-                  <div
-                    key={index}
-                    className="relative w-20 h-20 border rounded-lg overflow-hidden"
-                  >
-                    <img
-                      src={logoUrl}
-                      alt={`Logo ${index + 1}`}
-                    
-                      className="object-contain"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
+            {/* 📅 Duration */}
+            <div className="col-span-12 md:col-span-3 text-sm md:text-right font-medium ">
+              <p>
+                {edu.startDate?.split("-")[0]} —{" "}
+                {edu.isCurrent ? "Present" : edu.endDate?.split("-")[0]}
+              </p>
+            </div>
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 

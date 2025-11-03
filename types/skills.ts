@@ -1,5 +1,5 @@
 export interface SkillType {
-  _id:string;
+  _id?:string;
     name: string;
     level?: string; 
     icon?: string; 

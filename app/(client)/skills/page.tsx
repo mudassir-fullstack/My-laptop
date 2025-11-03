@@ -1,57 +1,76 @@
 "use client";
+
 import { useSkillsAndTools } from "@/hooks/useSkills";
+import { SkillType } from "@/types/skills";
 
 const SkillsPage = () => {
   const { data: skills, loading, error } = useSkillsAndTools("skill");
-  const { data: tools } = useSkillsAndTools("tool");
-
+ const { data: tools, loading: loadingTools, error: errorTools } = useSkillsAndTools("tool");
   if (loading) return <p>Loading...</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
+  if (error) return <p>{error}</p>;
+
+ // ✅ Only group skills that have a level — prevents “Other” showing
+const groupedSkills =
+  Array.isArray(skills) && skills.length > 0
+    ? skills.reduce((acc: Record<string, SkillType[]>, skill: SkillType) => {
+        if (skill.level) {
+          if (!acc[skill.level]) acc[skill.level] = [];
+          acc[skill.level].push(skill);
+        }
+        return acc;
+      }, {})
+    : {};
 
   return (
-    <div className="p-6">
-      {/* 🧠 Skills Section */}
-      <h1 className="text-3xl font-bold mb-4">My Skills</h1>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {skills.map((skill) => (
-          <div
-            key={skill._id}
-            className="p-4 border rounded-lg shadow text-center hover:shadow-lg transition"
-          >
-            {skill.icon && (
-              <img
-                src={skill.icon}
-                alt={skill.name}
-                className="w-12 h-12 mx-auto mb-2 object-contain"
-              />
-            )}
-            <h2 className="font-semibold">{skill.name}</h2>
-            {skill.level && (
-              <p className="text-sm text-gray-500">{skill.level}</p>
-            )}
-          </div>
-        ))}
-      </div>
+    <section className="pt-6 pb-20 md:pb-52 fade-in-up" id="skills">
 
-      <h1 className="text-3xl font-bold my-6">Tools I Use</h1>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {tools.map((tool) => (
-          <div
-            key={tool._id}
-            className="p-4 border rounded-lg shadow text-center hover:shadow-lg transition"
-          >
-            {tool.icon && (
-              <img
-                src={tool.icon}
-                alt={tool.name}
-                className="w-12 h-12 mx-auto mb-2 object-contain"
-              />
-            )}
-            <h2 className="font-semibold">{tool.name}</h2>
-          </div>
-        ))}
-      </div>
-    </div>
+    <h2>Skills & Tools</h2>
+    {/* ====================== SKILLS ====================== */}
+      {skills && skills.length > 0 ? (
+        <div className="">
+          {Object.entries(groupedSkills).map(([type, group]) => (
+            <div key={type} className="">
+              <h4>{type}</h4>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 py-6">
+                {group.map((skill) => (
+                  <li key={skill._id || skill.name} className="flex items-center gap-4">
+                    {/* Colored dot using your global variable */}
+                    <span className="dot w-2 h-2 rounded-full shrink-0"></span>
+
+                    <span>{skill.name}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p>No skills found.</p>
+      )}
+    {/* ====================== TOOLS ====================== */}
+{tools && tools.length > 0 ? (
+  <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 pt-16 md:pt-28">
+    {tools.slice(0, 8).map((tool) => (
+      <li
+        key={tool._id || tool.name}
+        className=""
+      >
+        {tool.icon && (
+          <img
+            src={tool.icon}
+            alt={tool.name}
+            className="w-16 h-16 object-contain"
+          />
+        
+        )}
+ <h5 className="items-center">{tool.name}</h5>
+    </li>
+    ))}
+  </ul>
+) : (
+  <p>No tools found.</p>
+)}
+ </section>
   );
 };
 

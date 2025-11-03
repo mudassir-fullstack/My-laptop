@@ -9,8 +9,6 @@ const LanguageSchema = new Schema<ILanguage>(
     name: { type: String, required: true },
     proficiency: {
       type: String,
-      required: true,
-      enum: ["Beginner", "Intermediate", "Fluent", "Native"],
     },
   },
   { timestamps: true }

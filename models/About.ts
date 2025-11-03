@@ -4,6 +4,7 @@ import { About as AboutType } from "@/types/about";
 export interface IAbout extends Omit<AboutType, "_id">, Document {}
 const aboutSchema = new Schema<IAbout>(
   {
+    title: [{ type: String }],
     profilePicture: { type: String },
     name: { type: String, required: true },
     email: { type: String, required: true },

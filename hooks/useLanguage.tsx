@@ -10,7 +10,7 @@ export const useLanguages = () => {
   useEffect(() => {
     const fetchLanguages = async () => {
       try {
-        const res = await axios.get("/api/languages");
+        const res = await axios.get("/api/language");
         setData(res.data.data);
       } catch (err: any) {
         setError(err.message);

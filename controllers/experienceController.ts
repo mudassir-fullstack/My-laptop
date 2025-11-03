@@ -83,28 +83,36 @@ export const POST = async (req: Request) => {
         companyLogo = uploadedLogo.secure_url;
       }
 
-      // --- Upload project images (if any)
-      const uploadedProjects = await Promise.all(
-        projects.map(async (project: any) => {
-          if (project.projectImage && typeof project.projectImage === "object") {
-            const file = project.projectImage as File;
-            const bytes = await file.arrayBuffer();
-            const buffer = Buffer.from(bytes);
+// --- Upload project images (if any)
+// --- Upload project images (if any)
+const uploadedProjects = await Promise.all(
+  projects.map(async (project: any) => {
+    // project.projectImage contains the key name of the file (e.g. "projectImage1")
+    if (project.projectImage && typeof project.projectImage === "string") {
+      const file = formData.get(project.projectImage) as File | null;
 
-            const uploaded: any = await new Promise((resolve, reject) => {
-              cloudinary.uploader
-                .upload_stream({ folder: "experience/project_images" }, (err, result) => {
-                  if (err) reject(err);
-                  else resolve(result);
-                })
-                .end(buffer);
-            });
+      if (file && file.size > 0) {
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
 
-            project.projectImage = uploaded.secure_url;
-          }
-          return project;
-        })
-      );
+        const uploaded: any = await new Promise((resolve, reject) => {
+          cloudinary.uploader
+            .upload_stream({ folder: "experience/project_images" }, (err, result) => {
+              if (err) reject(err);
+              else resolve(result);
+            })
+            .end(buffer);
+        });
+
+        project.projectImage = uploaded.secure_url; // Replace string with uploaded URL
+      } else {
+        project.projectImage = ""; // No file uploaded
+      }
+    }
+
+    return project;
+  })
+);
 
       data = {
         companyName,

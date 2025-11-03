@@ -5,7 +5,7 @@ export interface Project {
   }
   
   export interface experience {
-    _id:string;
+    _id?:string;
     companyName: string;
     position: string;
     employmentType?: string;

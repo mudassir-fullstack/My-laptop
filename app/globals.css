@@ -1,0 +1,272 @@
+@import "tailwindcss";
+
+.container {
+  width: 100%;
+  max-width: 1400px; /* keeps total width controlled */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;  /* mobile base */
+  padding-right: 1.5rem;
+  transition: padding 0.3s ease;
+  box-sizing: border-box;
+  overflow-x: hidden;
+
+}
+
+/* 📱 Tablet (md ≥ 768px) */
+@media (min-width: 768px) {
+  .container {
+    padding-left: 4rem;   /* increase side space */
+    padding-right: 4rem;
+  }
+}
+
+/* 💻 Desktop (lg ≥ 1024px) */
+@media (min-width: 1024px) {
+  .container {
+    padding-left: 6rem;   /* more space on large screens */
+    padding-right: 6rem;
+
+  }
+}
+
+/* 🖥 Big Desktop (xl ≥ 1280px) */
+@media (min-width: 1280px) {
+  .container {
+    padding-left: 8rem;   /* even more space */
+    padding-right: 8rem;
+  }
+}
+
+/* 🖥 Ultra-wide (2xl ≥ 1536px) */
+@media (min-width: 1536px) {
+  .container {
+    padding-left: 10rem;  /* maximum comfortable spacing */
+    padding-right: 10rem;
+  }
+}
+ 
+/* 🎨 THEME VARIABLES */
+
+/* 🌞 Light Theme */
+:root[data-theme="light"] {
+  --primary:#1d4ed8;
+  --background-color: #ffffff;
+  --text-color: #000000;
+  --accent-color: #1d4ed8; /* for h1, h4, icons, etc. */
+  --link-color: #000000;
+  --button-bg: #1d4ed8;
+  --button-text: #ffffff;
+  --heading-color: #1d4ed8;
+  --icon-color: #1d4ed8;
+  --dot-color: #1d4ed8;
+
+}
+
+/* 🌙 Dark Theme */
+:root[data-theme="dark"] {
+    --primary:rgb(221,255,0);
+  --background-color: #0f172a; /* slate-900 */
+  --text-color: #ffffff;
+  --accent-color: rgb(221,255,0); /* bright yellow */
+  --link-color: #ffffff;
+  --button-bg: rgb(221,255,0);
+  --button-text: #000000;
+  --heading-color: rgb(221,255,0);
+  --icon-color: rgb(221,255,0);
+  --dot-color: rgb(221,255,0);
+}
+
+/* 🌍 Base Body Styling */
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
+   scroll-behavior: smooth;
+}
+
+/* 🧱 TYPOGRAPHY SCALE */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+/* --- Headings --- */
+h1 {
+  font-size: clamp(2.25rem, 5vw, 3.75rem); /* 36px → 60px */
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem); /* 28px → 44px */
+  font-weight: 700;
+  color: var(--heading-color);
+}
+
+h3 {
+  font-size: clamp(1.5rem, 2.5vw, 2rem); /* 24px → 32px */
+  font-weight: 700;
+}
+
+h4 {
+  font-size: clamp(1.25rem, 2vw, 1.5rem); /* 20px → 24px */
+  font-weight: 600;
+  color: var(--heading-color);
+}
+
+h5 {
+  font-size: clamp(1.125rem, 1.8vw, 1.25rem); /* 18px → 20px */
+  font-weight: 600;
+  
+}
+
+h6 {
+  font-size: clamp(1rem, 1.5vw, 1.125rem); /* 16px → 18px */
+  font-weight: 600;
+  color: var(--heading-color);
+
+}
+
+/* --- Paragraphs --- */
+p {
+  font-size: clamp(0.9rem, 1.2vw, 1rem); /* 14.4px → 16px */
+  font-weight: 400;
+  margin-bottom: 1rem;
+  line-height: 1.7;
+}
+
+
+
+
+/* --- Buttons --- */
+button {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  font-weight: 600;
+  border: none;
+  border-radius: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: clamp(0.85rem, 2vw, 1rem);
+  padding: clamp(0.5rem, 1vw, 0.75rem) clamp(1.25rem, 2vw, 1.75rem);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Button Hover + Active Animations */
+button:hover {
+  opacity: 0.9;
+  transform: scale(1.04);
+}
+button:active {
+  transform: scale(0.96);
+}
+button:focus-visible {
+  outline: 2px solid var(--button-text);
+  outline-offset: 3px;
+}
+button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(0);
+  opacity: 0;
+  border-radius: inherit;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  z-index: -1;
+}
+
+button:hover::after {
+  transform: scale(1.5);
+  opacity: 1;
+}
+
+/* Glow effect when focused (dark/light friendly) */
+button:focus-visible {
+  box-shadow: 0 0 10px var(--button-bg);
+}
+
+/* Add soft hover lift + rotation */
+button:hover {
+  transform: translateY(-2px) scale(1.03);
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+
+/* --- Icons, Bullets, Progress Lines --- */
+.icon {
+  color: var(--icon-color);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  flex-shrink: 0;
+}
+
+.dot {
+  background-color: var(--dot-color);
+}
+
+/* --- Small Screens Fallback --- */
+@media (max-width: 640px) {
+  h1 { font-size: 1.75rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.25rem; }
+  h4 { font-size: 1.125rem; }
+  h5 { font-size: 1rem; }
+  h6 { font-size: 0.875rem; }
+  p  { font-size: 0.875rem; }
+}
+/* ✨ Animated Headings Hover (for portfolios/personal sites) */
+h1:hover, h2:hover, h3:hover {
+  letter-spacing: 0.5px;
+  transition: letter-spacing 0.3s ease;
+}
+
+/* ✨ Anchor underline slide effect */
+.anker {
+  position: relative;
+   color: var(--text-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+
+}
+
+.anker::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0%;
+  height: 2px;
+  background-color: var(--accent-color);
+  transition: width 0.3s ease;
+}
+
+.anker:hover::after {
+  width: 100%;
+}
+
+/* 🌀 Page Fade + Slide Animation */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Apply to all top-level sections or elements */
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out both;
+}

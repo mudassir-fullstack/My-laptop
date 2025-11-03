@@ -1,110 +1,105 @@
 "use client";
 
 import { useState } from "react";
-import { useContact } from "@/hooks/useContact";
 
 const ContactPage = () => {
-  const { sendMessage, loading, success, error } = useContact();
-
-  const [formData, setFormData] = useState({
+  const [form, setForm] = useState({
     name: "",
     email: "",
+    phone: "",
     subject: "",
     message: "",
-    phone: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await sendMessage(formData);
+    setLoading(true);
+    setStatus(null);
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setStatus("✅ Message sent successfully!");
+        setForm({ name: "", email: "", phone: "", subject: "", message: "" });
+      } else {
+        setStatus(`❌ ${data.message || "Something went wrong"}`);
+      }
+    } catch (err) {
+      setStatus("❌ Server error while sending message");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <section className="max-w-2xl mx-auto p-6 bg-white dark:bg-gray-900 rounded-2xl shadow-md mt-10">
-      <h1 className="text-3xl font-bold text-center mb-6">Contact Me</h1>
+    <section className="pt-6 pb-36 md:pb-28 fade-in-up">
+      <h2>Contact Me</h2>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div>
-          <label className="block text-sm font-medium mb-1">Full Name *</label>
-          <input
-            type="text"
-            name="name"
-            required
-            value={formData.name}
-            onChange={handleChange}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring focus:ring-indigo-200"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-1">Email *</label>
-          <input
-            type="email"
-            name="email"
-            required
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring focus:ring-indigo-200"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-1">Phone</label>
-          <input
-            type="text"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring focus:ring-indigo-200"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-1">Subject</label>
-          <input
-            type="text"
-            name="subject"
-            value={formData.subject}
-            onChange={handleChange}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring focus:ring-indigo-200"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-1">Message *</label>
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
+        <input
+          type="text"
+          name="name"
+          placeholder="Your Name"
+          value={form.name}
+          onChange={handleChange}
+          required
+          className="border p-2 rounded w-full placeholder-(--primary)"
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Your Email"
+          value={form.email}
+          onChange={handleChange}
+          required
+          className="border p-2 rounded w-full placeholder-(--primary)"
+        />
+<input
+  type="text"
+  name="phone"
+  placeholder="Phone (optional)"
+  value={form.phone}
+  onChange={handleChange}
+  className="border p-2 rounded w-full placeholder-(--primary) "
+/>
+        
+        <div className="col-span-1 sm:col-span-2">
           <textarea
             name="message"
+            placeholder="Your Message"
+            value={form.message}
+            onChange={handleChange}
             required
             rows={5}
-            value={formData.message}
-            onChange={handleChange}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring focus:ring-indigo-200"
+            className="border p-2 rounded w-full placeholder-(--primary)"
           />
         </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-all disabled:opacity-50"
-        >
-          {loading ? "Sending..." : "Send Message"}
-        </button>
+        <div className="col-span-1 sm:col-span-2">
+          <button
+            type="submit"
+            disabled={loading}
+            className="border px-4 py-2 rounded w-full sm:w-auto"
+          >
+            {loading ? "Sending..." : "Send Message"}
+          </button>
+        </div>
       </form>
 
-      {success && (
-        <p className="text-green-600 text-center mt-4 font-medium">
-          ✅ {success}
-        </p>
-      )}
-      {error && (
-        <p className="text-red-600 text-center mt-4 font-medium">
-          ❌ {error}
-        </p>
-      )}
+      {status && <p className="mt-4">{status}</p>}
     </section>
   );
 };

@@ -2,28 +2,44 @@
 
 import { useLanguages } from "@/hooks/useLanguage";
 
+const proficiencyLevels: Record<string, number> = {
+  Beginner: 25,
+  Intermediate: 50,
+  Fluent: 75,
+  Native: 100,
+};
+
 const LanguagesPage = () => {
   const { data, loading, error } = useLanguages();
 
-  if (loading) return <p className="text-center">Loading...</p>;
-  if (error) return <p className="text-center text-red-500">{error}</p>;
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="max-w-4xl mx-auto py-10 px-4">
-      <h1 className="text-3xl font-bold mb-6 text-center">Languages</h1>
+    <section className="pt-6 pb-20 md:pb-52 fade-in-up" id="skills">
+      <h2>Languages</h2>
 
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-4">
         {data.map((lang, index) => (
-          <div
-            key={lang._id || index}
-            className="border p-4 rounded-lg shadow-md text-center bg-white hover:shadow-lg transition"
-          >
-            <h3 className="font-semibold text-lg">{lang.name}</h3>
-            <p className="text-gray-500">{lang.proficiency}</p>
+          <div key={lang._id || index} className="space-y-2">
+            <div className="flex justify-between items-center">
+              <span>{lang.name}</span>
+            </div>
+{/* Progress bar */}
+<div className="grid grid-cols-12 w-full">
+  <div className="md:col-span-6 col-span-12 bg-gray-200 dark:bg-gray-700 h-2 rounded-full overflow-hidden">
+    <div
+      className="dot h-2 rounded-full transition-all duration-500"
+      style={{
+        width: `${proficiencyLevels[lang.proficiency] || 0}%`,
+      }}
+    ></div>
+  </div>
+</div>
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 

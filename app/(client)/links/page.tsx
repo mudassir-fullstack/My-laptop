@@ -1,70 +1,41 @@
 "use client";
 
-import Image from "next/image";
 import { useLinks } from "@/hooks/useLinks";
 
 const LinksPage = () => {
   const { data, loading, error } = useLinks();
 
-  if (loading)
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-gray-500">Loading links...</p>
-      </div>
-    );
-
-  if (error)
-    return (
-      <div className="text-red-500 text-center mt-10">
-        Error: {error}
-      </div>
-    );
-
-  if (!data.length)
-    return (
-      <div className="text-gray-500 text-center mt-10">
-        No links found.
-      </div>
-    );
+  if (loading) return <p>Loading links...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
-    <div className="max-w-4xl mx-auto py-10 px-4">
-      <h1 className="text-3xl font-semibold mb-6">My Links</h1>
+    <section id="links" className="pt-6 pb-20 md:pb-52 fade-in-up">
+      <h2>Social Links</h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {data.map((link) => (
-          <div
-            key={link._id}
-            className="p-5 border rounded-2xl shadow-sm hover:shadow-lg transition"
-          >
-            {link.icon && (
-              <div className="w-16 h-16 mx-auto mb-4">
-                <img
-                  src={link.icon}
-                  alt={link.platform}
-                  width={64}
-                  height={64}
-                  className="rounded-full object-cover"
-                />
-              </div>
-            )}
-<p>{link.icon}</p>
-            <h2 className="text-lg font-semibold text-center">{link.platform}</h2>
-            <p className="text-sm text-gray-500 text-center mb-2">
-              {link.description}
-            </p>
-            <a
-              href={link.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block text-center mt-2 text-blue-600 hover:underline"
-            >
-              Visit
-            </a>
-          </div>
-        ))}
-      </div>
-    </div>
+      {data.length === 0 ? (
+        <p>No links available yet.</p>
+      ) : (
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-8 gap-8 mt-8 justify-start items-start">
+  {data.map((link) => (
+    <a
+      key={link._id || link.platform}
+      href={link.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex justify-start"
+    >
+      {link.icon && (
+        <img
+          src={link.icon}
+          alt={link.platform}
+          className="w-16 h-16"
+        />
+      )}
+    </a>
+  ))}
+</div>
+  )}
+    </section>
   );
 };
 

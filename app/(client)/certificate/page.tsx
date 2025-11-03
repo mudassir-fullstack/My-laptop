@@ -1,68 +1,62 @@
 "use client";
 
-import Image from "next/image";
 import { useCertificates } from "@/hooks/useCertificate";
+import { MdOutlineArrowOutward } from "react-icons/md";
 
 const CertificatesPage = () => {
   const { data, loading, error } = useCertificates();
 
-  if (loading) return <p className="text-center mt-10">Loading certificates...</p>;
-  if (error) return <p className="text-center text-red-500 mt-10">{error}</p>;
+  if (loading) return <p>Loading certificates...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <h1 className="text-3xl font-bold text-center mb-10">Certificates</h1>
+    <section id="certificate" className="pt-6 pb-20 md:pb-52 fade-in-up">
+      <h2>Certificates</h2>
 
       {data.length === 0 ? (
-        <p className="text-center text-gray-500">No certificates available yet.</p>
+        <p>No certificates available yet.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid gap-10 mt-3">
           {data.map((cert) => (
             <div
               key={cert._id}
-              className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-all duration-200"
+              className="
+                grid grid-cols-1 sm:grid-cols-12 items-start gap-4
+                
+              "
             >
-              <h2 className="text-xl font-semibold mb-2 text-gray-800">{cert.title}</h2>
-              <p className="text-gray-600 text-sm mb-1">
-                <strong>Organization:</strong> {cert.organization}
-              </p>
-              <p className="text-gray-500 text-sm mb-3">
-                <strong>Issued:</strong> {cert.issueDate}
-              </p>
+              {/* 🎓 Right side — title & organization */}
+              <div className="sm:col-span-9">
+                <h3 className="cursor-pointer">{cert.title}</h3>
 
-              {/* ✅ Multiple Certificate Images */}
-              {cert.certificateImages && cert.certificateImages.length > 0 && (
-                <div className="grid grid-cols-2 gap-2 mb-3">
-                  {cert.certificateImages.map((img, idx) => (
-                    <div key={idx} className="relative w-full h-32">
-                      <img
-                        src={img}
-                        alt={cert.title}
-                        className="rounded-lg object-cover border"
-                      />
-                    </div>
-                  ))}
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h6>{cert.organization}</h6>
+
+                  {/* 🔗 Clickable certificate icon */}
+                  {Array.isArray(cert.certificateImages) &&
+                    cert.certificateImages.length > 0 && (
+                      <a
+                        href={cert.certificateImages[0]}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="View Certificate"
+                        className="inline-flex items-center"
+                      >
+                        <MdOutlineArrowOutward className="icon cursor-pointer hover:opacity-80 transition" />
+                      </a>
+                    )}
                 </div>
-              )}
+              </div>
 
-              {cert.description && (
-                <p className="text-gray-700 text-sm mb-2">{cert.description}</p>
-              )}
-
-              {cert.verifyLink && (
-                <a
-                  href={cert.verifyLink}
-                  target="_blank"
-                  className="text-blue-500 text-sm font-medium hover:underline"
-                >
-                  Verify Certificate →
-                </a>
-              )}
+              {/* 📅 Left side — issue year */}
+              <div className="sm:col-span-3 font-medium text-sm sm:text-right">
+                <p>{cert.issueDate?.split("-")[0]}</p>
+              </div>
             </div>
           ))}
         </div>
       )}
-    </div>
+    </section>
   );
 };
 

@@ -7,4 +7,5 @@ export interface About {
     phone: string;
     address?: string;
     linkedin: string;
+    title?: string[];
 }
