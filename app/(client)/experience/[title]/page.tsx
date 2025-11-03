@@ -68,7 +68,7 @@ export default function ProjectPage({ params }: ProjectPageProps) {
       </div>
 
       {/* ⚙️ Technologies */}
-      {foundExperience && foundExperience?.technologies?.length > 0 && (
+      {foundExperience &&  Array.isArray(foundExperience.technologies) && foundExperience?.technologies?.length > 0 && (
         <div className="grid gap-4">
           <h3 className="font-medium text-lg">Technologies Used</h3>
           <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
