@@ -1,25 +1,25 @@
-import mongoose, { Mongoose } from "mongoose";
+import mongoose from "mongoose";
 
-const DB_URI = process.env.DB_URI || "";
+const MONGODB_URI = process.env.DB_URI as string;
 
-declare global {
-  var mongooseConn: Mongoose | null | undefined;
+if (!MONGODB_URI) {
+  throw new Error("❌ Missing DB_URI environment variable");
 }
 
-export const connectDB = async (): Promise<Mongoose> => {
-  if (global.mongooseConn) {
-    return global.mongooseConn;
+let isConnected = false;
+
+export const connectDB = async () => {
+  if (isConnected) {
+    // ✅ Already connected (cached)
+    return;
   }
 
   try {
-    const conn = await mongoose.connect(DB_URI);
-    global.mongooseConn = conn;
-    console.log("✅ MongoDB Connected Successfully");
-    return conn;
+    const db = await mongoose.connect(MONGODB_URI);
+    isConnected = db.connections[0].readyState === 1;
+    console.log("✅ MongoDB connected");
   } catch (error) {
-    console.error("❌ MongoDB Connection Error:", error);
+    console.error("❌ MongoDB connection failed:", error);
     throw new Error("MongoDB connection failed");
   }
 };
-
-connectDB();

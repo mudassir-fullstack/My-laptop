@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Fira_Code } from "next/font/google";
 import "./globals.css";
-import "@/lib/db";
+
 import Header from "@/components/header";
 import { ThemeProvider } from "@/hooks/useThemeContext";
 
