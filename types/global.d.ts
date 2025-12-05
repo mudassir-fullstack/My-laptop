@@ -8,3 +8,7 @@ interface ThemeContextType {
   theme: Theme;
   toggleTheme: () => void;
 }
+
+interface ExtraInfo {
+  [key: string]: string | number | boolean | ExtraInfo | ExtraInfo[];
+}
